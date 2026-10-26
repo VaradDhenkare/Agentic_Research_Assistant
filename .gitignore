@@ -1,0 +1,27 @@
+# secrets
+.env
+
+# python cache
+__pycache__/
+*.pyc
+
+# venvs - NEVER push
+venv/
+venvs/
+agentic/
+D:/rag-projects/venvs/
+hf_cache/
+D:/hf_cache/
+
+# DB - binary, big
+db_qdrant/
+agentic-research/
+*.db
+*.sqlite
+
+# docs - private papers
+my-docs/
+D:/rag-projects/my-docs/
+
+# streamlit
+.streamlit/
