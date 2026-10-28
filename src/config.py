@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -14,8 +15,9 @@ QDRANT_API_KEY = os.getenv("QDRANT_API_KEY", "")
 LLM_GROQ = "openai/gpt-oss-20b"
 LLM_OPENAI = "gpt-4o-mini"  # dummy, not used, just to prevent ImportError
 
-# DB path on D drive
-CHROMA_PATH = os.getenv("CHROMA_PATH", "D:/rag-projects/agentic-research/db_qdrant")
+# DB path
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+CHROMA_PATH = os.getenv("CHROMA_PATH", str(PROJECT_ROOT / "db_qdrant"))
 
 def get_llm_provider():
     return "groq"

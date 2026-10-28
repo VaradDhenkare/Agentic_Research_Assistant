@@ -4,7 +4,7 @@ from qdrant_client import QdrantClient
 from langchain_qdrant import QdrantVectorStore
 from .config import QDRANT_URL, QDRANT_API_KEY
 
-QDRANT_LOCAL_PATH = Path("D:/rag-projects/agentic-research/db_qdrant")
+QDRANT_LOCAL_PATH = Path(__file__).resolve().parent.parent / "db_qdrant"
 QDRANT_LOCAL_PATH.mkdir(parents=True, exist_ok=True)
 CACHE_PATH = str(Path("D:/hf_cache"))
 Path(CACHE_PATH).mkdir(parents=True, exist_ok=True)

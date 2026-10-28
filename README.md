@@ -185,16 +185,16 @@ If you have low space on C drive, force caches to D drive:
 
 ```powershell
 mkdir D:\hf_cache
-mkdir D:\rag-projects\agentic-research\db_qdrant
+mkdir D:\rag-projects\Agentic-Research-Assistant\db_qdrant
 setx HF_HOME D:\hf_cache
-setx CHROMA_DB_PATH D:\rag-projects\agentic-research\db_qdrant
+setx CHROMA_DB_PATH D:\rag-projects\Agentic-Research-Assistant\db_qdrant
 pip cache purge
 ```
 
 Then set in `.env`:
 
 ```
-CHROMA_DB_PATH=D:\rag-projects\agentic-research\db_qdrant
+CHROMA_DB_PATH=D:\rag-projects\Agentic-Research-Assistant\db_qdrant
 ```
 
 Restart terminal after `setx`.

@@ -25,3 +25,4 @@ def web_search(query: str) -> List[Document]:
     except Exception as e:
         print(f"Web search failed: {e} - using only PDFs")
         return []
+    
