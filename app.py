@@ -2,7 +2,7 @@ import streamlit as st
 from pathlib import Path
 from src.loader import load_docs_from_folder
 from src.chunker import chunk_docs
-from src.vector_store import build_vectorstore, load_vectorstore
+from src.vector_store import build_vectorstore, load_vectorstore, close_qdrant_client
 from src.graph import run_agentic_rag
 from src.config import CHROMA_PATH
 
@@ -29,8 +29,9 @@ with st.sidebar:
         if not Path(folder_path).exists():
             st.error(f"Not found: {folder_path}")
         else:
-            # Clear cache before rebuild to release lock
+            # Clear cache and close open DB handles before rebuild to release lock
             get_vectorstore.clear()
+            close_qdrant_client()
             with st.spinner("Loading docs..."):
                 docs = load_docs_from_folder(folder_path)
                 st.write(f"Loaded {len(docs)} pages")
@@ -62,7 +63,9 @@ if q := st.chat_input("e.g., What is CRAG? or what does my PDF say?"):
         st.markdown(q)
     with st.chat_message("assistant"):
         with st.spinner("Retrieve -> Grade -> [Web Search] -> Generate..."):
-            result = run_agentic_rag(q)
+            # Pass recent chat history for conversation context
+            recent_history = st.session_state.messages[-7:-1]  # last 6 messages before current
+            result = run_agentic_rag(q, chat_history=recent_history)
             st.markdown(result.get("answer","No answer"))
             st.caption(f"Grade: {result.get('relevance')} | Web used: {len(result.get('web_docs',[]))>0}")
             st.session_state.messages.append({"role":"assistant","content":result.get("answer","")})

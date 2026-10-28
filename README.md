@@ -24,7 +24,7 @@ Implements **Corrective RAG (CRAG)**:
 - No C++ compilation - uses Qdrant (pure Python)
 - Citation aware: `[source: filename.pdf]` or `[source: https://...]`
 - Agentic loop with LangGraph conditional edges
-- Free tier ready: Groq (free) + OpenAI embeddings + Tavily (1000 free/month)
+- Free tier ready: Groq (free) + FastEmbed local embeddings (100% free, CPU) + Tavily (1000 free/month)
 
 ---
 
@@ -34,6 +34,8 @@ Implements **Corrective RAG (CRAG)**:
 Agentic-Research-Assistant/
 ├── app.py
 ├── cli.py
+├── view_qdrant.py
+├── db_qdrant/
 ├── requirements.txt
 ├── .env.example
 ├── README.md
@@ -65,48 +67,50 @@ cd agentic-research-assistant
 
 Or download ZIP from GitHub → Extract.
 
-### 2. Create Virtual Environment
+### 2. Activate Virtual Environment
 
-**Windows (PowerShell / CMD):**
-```powershell
-python -m venv venv
-```
-
-**macOS / Linux:**
-```bash
-python3 -m venv venv
-```
-
-### 3. Activate Virtual Environment
-
-**Windows PowerShell:**
+**In this workspace (environment already set up):**
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
-.\venv\Scripts\Activate.ps1
+..\venvs\agentic\Scripts\Activate.ps1
 ```
+*(You will see `(agentic)` in your terminal. All dependencies are already installed!)*
 
-**Windows CMD:**
-```cmd
-venv\Scripts\activate.bat
-```
+---
 
-**macOS / Linux:**
-```bash
-source venv/bin/activate
-```
+**Or if setting up fresh from GitHub:**
 
-You should see `(venv)` at the start of your terminal.
+1. **Create Virtual Environment:**
+   ```powershell
+   # Windows
+   python -m venv venv
 
-### 4. Install Dependencies
+   # macOS / Linux
+   python3 -m venv venv
+   ```
 
-```bash
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-```
+2. **Activate Virtual Environment:**
+   ```powershell
+   # Windows PowerShell
+   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+   .\venv\Scripts\Activate.ps1
 
-> No Visual C++ Build Tools needed - uses Qdrant (pure Python wheel).
+   # Windows CMD
+   venv\Scripts\activate.bat
 
-### 5. Configure Environment Variables
+   # macOS / Linux
+   source venv/bin/activate
+   ```
+
+3. **Install Dependencies:**
+   ```bash
+   python -m pip install --upgrade pip
+   pip install -r requirements.txt
+   ```
+
+> No Visual C++ Build Tools needed - uses Qdrant (pure Python wheel) and FastEmbed.
+
+### 3. Configure Environment Variables
 
 ```bash
 # Windows
@@ -120,16 +124,17 @@ Open `.env` in any editor and add your keys:
 
 ```
 GROQ_API_KEY=gsk_xxxxxxxxxxxxxxxxxxxx
-OPENAI_API_KEY=sk-proj_xxxxxxxxxxxxxxxxxxxx
 TAVILY_API_KEY=tvly-xxxxxxxxxxxxxxxxxxxx
+HF_HOME=D:\hf_cache
+CHROMA_DB_PATH=db_qdrant
 ```
 
-**Get Free API Keys:**
-- **OpenAI** (embeddings): https://platform.openai.com/api-keys — `text-embedding-3-small` ~$0.02 for 50 PDFs
-- **Groq** (LLM, FREE): https://console.groq.com/keys — `llama-3.3-70b-versatile`
+**API Keys Needed:**
+- **Groq** (LLM, FREE): https://console.groq.com/keys — fast inference
 - **Tavily** (web search, FREE): https://app.tavily.com — 1000 searches/month
+- **FastEmbed** (Embeddings, 100% FREE): Runs entirely locally via `BAAI/bge-small-en-v1.5`, **no OpenAI API key needed!**
 
-### 6. Add Your Documents
+### 4. Add Your Documents
 
 Create a folder for your PDFs:
 
@@ -139,7 +144,7 @@ mkdir my-docs
 
 Put 5-10 PDFs, TXTs, or MDs inside `my-docs/` (or any folder you like).
 
-### 7. Run the App
+### 5. Run the App
 
 **Streamlit UI (Recommended):**
 
